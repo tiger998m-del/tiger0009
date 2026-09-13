@@ -358,29 +358,6 @@ button,input,textarea{font-family:inherit}
     </b:section>
 
     <b:section class='sidebar' id='sidebar' showaddelement='true'>
-      <b:widget id='HTML2' locked='false' title='About this blog' type='HTML' version='2'>
-      <b:includable id='main'>
-        <b:if cond='data:title != &quot;&quot;'>
-          <h2><data:title/></h2>
-        </b:if>
-        <div><data:content/></div>
-      </b:includable>
-      </b:widget>
-
-      <b:widget id='HTML3' locked='false' title='Follow us' type='HTML' version='2'>
-      <b:includable id='main'>
-        <h2>Follow Us</h2>
-        <p style='color:var(--color-text-muted);font-size:14px'>Stay updated with our latest posts on social media.</p>
-        <div class='social-icons' style='justify-content:flex-start'>
-          <a aria-label='Facebook' href='https://www.facebook.com/share/14MtXKzyxvt/' rel='noopener me' target='_blank' style='background:#1877f2'><svg viewBox='0 0 24 24'><path d='M13.5 21v-8h2.7l.4-3.1h-3.1V8c0-.9.3-1.5 1.6-1.5H16.7V3.6C16.4 3.6 15.4 3.5 14.3 3.5c-2.4 0-4 1.5-4 4.1v2.3H7.6V13h2.7v8h3.2z'/></svg></a>
-          <a aria-label='X' href='https://x.com/azzooz_999?t=C8PmKf2UqEBqIbDdcotNcg&amp;s=09' rel='noopener me' target='_blank' style='background:#000'><svg viewBox='0 0 24 24'><path d='M18.9 3H22l-7.4 8.4L23 21h-6.9l-5.4-6.6L4.5 21H1.3l7.9-9L1 3h7.1l4.9 6.1L18.9 3zm-1.2 16h1.9L7.4 5H5.4l12.3 14z'/></svg></a>
-          <a aria-label='Instagram' href='https://www.instagram.com/tiger998.m?igsh=MWZ5OTh1ZWlzajdqaw==' rel='noopener me' target='_blank' style='background:#e1306c'><svg viewBox='0 0 24 24'><path d='M12 8.6a3.4 3.4 0 1 0 0 6.8 3.4 3.4 0 0 0 0-6.8zm0 5.6a2.2 2.2 0 1 1 0-4.4 2.2 2.2 0 0 1 0 4.4zm4.6-5.8a.8.8 0 1 1-1.6 0 .8.8 0 0 1 1.6 0zM21.9 7.4c-.1-1.2-.4-2.2-1.2-3-.8-.8-1.8-1.1-3-1.2C16.4 3 15.9 3 12 3s-4.4 0-5.7.2c-1.2.1-2.2.4-3 1.2-.8.8-1.1 1.8-1.2 3C2 8.6 2 9.1 2 13s0 4.4.2 5.7c.1 1.2.4 2.2 1.2 3 .8.8 1.8 1.1 3 1.2C7.6 23 8.1 23 12 23s4.4 0 5.7-.2c1.2-.1 2.2-.4 3-1.2.8-.8 1.1-1.8 1.2-3 .1-1.3.1-1.7.1-5.6s0-4.4-.1-5.6zm-2 11.1c-.1.9-.4 1.6-1.1 2.2-.7.7-1.3.9-2.2 1.1-1.2.1-1.5.2-5 .2s-3.8 0-5-.2c-.9-.2-1.6-.4-2.2-1.1-.7-.7-.9-1.3-1.1-2.2C3.2 17.4 3.2 17 3.2 13s0-3.8.2-5c.1-.9.4-1.6 1.1-2.2.7-.7 1.3-.9 2.2-1.1C7.9 4.6 8.3 4.6 12 4.6s3.8 0 5 .2c.9.1 1.6.4 2.2 1.1.7.7.9 1.3 1.1 2.2.1 1.2.2 1.5.2 5s0 3.8-.2 5z'/></svg></a>
-          <a aria-label='TikTok' href='https://www.tiktok.com/@mnaaziz3?_t=ZS-90aLnuiTlBK&amp;_r=1' rel='noopener me' target='_blank' style='background:#000'><svg viewBox='0 0 24 24'><path d='M16.6 2h-3.2v13.9c0 1.5-1.2 2.7-2.7 2.7a2.7 2.7 0 0 1-2.7-2.7 2.7 2.7 0 0 1 2.7-2.7c.3 0 .5 0 .8.1V10c-.3 0-.5-.1-.8-.1A5.9 5.9 0 0 0 4.8 16a5.9 5.9 0 0 0 5.9 5.9A5.9 5.9 0 0 0 16.6 16V8.4c1.2.9 2.6 1.4 4.2 1.4V6.6c-2.4 0-4.2-1.9-4.2-4.3z'/></svg></a>
-          <a aria-label='YouTube' href='https://youtube.com/@tiger.ksa.07?si=gQXHGMx8VqmqxSa8' rel='noopener me' target='_blank' style='background:#ff0000'><svg viewBox='0 0 24 24'><path d='M22 12s0-3.1-.4-4.6c-.2-.9-.9-1.5-1.8-1.8C18.3 5.2 12 5.2 12 5.2s-6.3 0-7.8.4c-.9.2-1.6.9-1.8 1.8C2 8.9 2 12 2 12s0 3.1.4 4.6c.2.9.9 1.5 1.8 1.8 1.5.4 7.8.4 7.8.4s6.3 0 7.8-.4c.9-.2 1.6-.9 1.8-1.8.4-1.5.4-4.6.4-4.6zM10 15.3V8.7L15.8 12 10 15.3z'/></svg></a>
-        </div>
-      </b:includable>
-      </b:widget>
-
       <b:widget id='PopularPosts1' locked='false' title='Popular Posts' type='PopularPosts' version='2'>
         <b:widget-settings>
           <b:widget-setting name='numItemsToShow'>5</b:widget-setting>
