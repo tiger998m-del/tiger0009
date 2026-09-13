@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+  Custom Blogger theme for tiger0009.com
+  Goals: clean/professional design, mobile-first, fast, SEO-friendly,
+  AdSense-ready (no popups/interstitials, clear navigation, required
+  legal pages linked in footer), social profiles linked in header/footer.
+
+  HOW TO INSTALL (Blogger):
+  1. Blogger dashboard -> Theme -> Backup / Restore -> Download theme (keep a backup!)
+  2. Theme -> Edit HTML
+  3. Select all existing code and delete it
+  4. Paste the entire content of this file
+  5. Click Save
+  6. Go to Settings -> Search preferences -> Meta tags -> Description -> Enable it and
+     write a 150-160 character description of the blog (needed for the meta description tag below)
+  7. Go to Layout to confirm widgets look right, then customize logo/menu links if needed
+-->
+<html b:css='false' b:defaultwidgetversion='2' b:layoutsVersion='3' b:responsive='true'
+      expr:dir='data:blog.languageDirection' expr:lang='data:blog.locale'
+      xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b'
+      xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
+<head>
+  <meta charset='UTF-8'/>
+  <meta content='width=device-width, initial-scale=1, minimum-scale=1' name='viewport'/>
+  <meta content='IE=edge' http-equiv='X-UA-Compatible'/>
+  <title><data:blog.pageTitle/></title>
+
+  <b:if cond='data:blog.metaDescription'>
+    <meta expr:content='data:blog.metaDescription' name='description'/>
+  <b:else/>
+    <meta expr:content='data:blog.title' name='description'/>
+  </b:if>
+  <meta content='index, follow, max-image-preview:large' name='robots'/>
+  <meta content='en_US' property='og:locale'/>
+  <link expr:href='data:blog.canonicalUrl' rel='canonical'/>
+  <link expr:href='data:blog.homepageUrl + &quot;feeds/posts/default&quot;' rel='alternate' type='application/atom+xml'/>
+
+  <!-- Open Graph -->
+  <meta expr:content='data:blog.pageTitle' property='og:title'/>
+  <meta expr:content='data:blog.canonicalUrl' property='og:url'/>
+  <meta expr:content='data:blog.title' property='og:site_name'/>
+  <b:if cond='data:blog.pageType == &quot;item&quot;'>
+    <meta content='article' property='og:type'/>
+  <b:else/>
+    <meta content='website' property='og:type'/>
+  </b:if>
+  <b:if cond='data:blog.metaDescription'>
+    <meta expr:content='data:blog.metaDescription' property='og:description'/>
+  </b:if>
+  <b:if cond='data:blog.postImageUrl'>
+    <meta expr:content='data:blog.postImageUrl' property='og:image'/>
+  </b:if>
+
+  <!-- Twitter Card -->
+  <meta content='summary_large_image' name='twitter:card'/>
+  <meta expr:content='data:blog.pageTitle' name='twitter:title'/>
+  <b:if cond='data:blog.metaDescription'>
+    <meta expr:content='data:blog.metaDescription' name='twitter:description'/>
+  </b:if>
+  <b:if cond='data:blog.postImageUrl'>
+    <meta expr:content='data:blog.postImageUrl' name='twitter:image'/>
+  </b:if>
+  <meta content='@azzooz_999' name='twitter:site'/>
+
+  <!-- Preconnects + fonts (Inter for body, Poppins for headings) -->
+  <link href='https://fonts.googleapis.com' rel='preconnect'/>
+  <link crossorigin='anonymous' href='https://fonts.gstatic.com' rel='preconnect'/>
+  <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Poppins:wght@600;700;800&amp;display=swap' rel='stylesheet'/>
+
+  <!-- Favicon -->
+  <b:if cond='data:blog.blogspotFaviconUrl'>
+    <link expr:href='data:blog.blogspotFaviconUrl' rel='icon' type='image/x-icon'/>
+  </b:if>
+
+  <!-- Organization / WebSite structured data (sitewide, safe head-level tags only) -->
+  <script type='application/ld+json'>
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": <data:blog.title.jsonEscaped/>,
+    "url": <data:blog.homepageUrl.jsonEscaped/>,
+    "sameAs": [
+      "https://www.facebook.com/share/14MtXKzyxvt/",
+      "https://x.com/azzooz_999",
+      "https://www.instagram.com/tiger998.m",
+      "https://www.tiktok.com/@mnaaziz3",
+      "https://youtube.com/@tiger.ksa.07"
+    ]
+  }
+  </script>
+  <script type='application/ld+json'>
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": <data:blog.title.jsonEscaped/>,
+    "url": <data:blog.homepageUrl.jsonEscaped/>
+  }
+  </script>
+
+  <b:skin><![CDATA[
+/* ==================== Design tokens ==================== */
+:root{
+  --color-bg:#ffffff;
+  --color-surface:#f8fafc;
+  --color-border:#e5e9f0;
+  --color-text:#1e2532;
+  --color-text-muted:#5b6472;
+  --color-primary:#2563eb;
+  --color-primary-dark:#1d4ed8;
+  --color-accent:#0ea5a4;
+  --radius-sm:8px;
+  --radius-md:14px;
+  --radius-lg:20px;
+  --shadow-sm:0 1px 3px rgba(20,29,48,.06);
+  --shadow-md:0 8px 24px rgba(20,29,48,.08);
+  --container:1140px;
+  --space-1:8px;
+  --space-2:16px;
+  --space-3:24px;
+  --space-4:40px;
+  --space-5:64px;
+  --font-body:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  --font-head:'Poppins',var(--font-body);
+}
+
+/* ==================== Reset ==================== */
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;background:var(--color-bg);color:var(--color-text);font-family:var(--font-body);font-size:17px;line-height:1.75;-webkit-font-smoothing:antialiased}
+img{max-width:100%;height:auto;display:block;border-radius:var(--radius-sm)}
+a{color:var(--color-primary);text-decoration:none}
+a:hover{color:var(--color-primary-dark);text-decoration:underline}
+h1,h2,h3,h4,h5,h6{font-family:var(--font-head);color:var(--color-text);line-height:1.3;font-weight:700;margin:1.4em 0 .6em}
+ul,ol{padding-inline-start:1.3em}
+.container{max-width:var(--container);margin:0 auto;padding:0 var(--space-2)}
+button,input,textarea{font-family:inherit}
+
+/* ==================== Top utility bar ==================== */
+.top-bar{background:var(--color-text);color:#fff;font-size:13px}
+.top-bar .container{display:flex;align-items:center;justify-content:space-between;gap:var(--space-2);padding-top:6px;padding-bottom:6px}
+.top-bar .tagline{opacity:.85}
+.social-icons{display:flex;gap:10px;align-items:center}
+.social-icons a{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.12);color:#fff;transition:background .2s,transform .2s}
+.social-icons a:hover{background:var(--color-primary);transform:translateY(-2px);text-decoration:none}
+.social-icons svg{width:16px;height:16px;fill:currentColor}
+.footer .social-icons a{background:rgba(255,255,255,.08)}
+
+/* ==================== Header ==================== */
+.header{background:#fff;border-bottom:1px solid var(--color-border);position:sticky;top:0;z-index:50;box-shadow:var(--shadow-sm)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);padding:14px 0}
+.site-title{font-family:var(--font-head);font-size:26px;font-weight:800;letter-spacing:-.02em;margin:0}
+.site-title a{color:var(--color-text)}
+.site-title a:hover{text-decoration:none;color:var(--color-primary)}
+.site-description{margin:2px 0 0;font-size:13px;color:var(--color-text-muted)}
+
+.nav-toggle{display:none}
+.nav-toggle-label{display:none;cursor:pointer;padding:8px;border-radius:var(--radius-sm)}
+.nav-toggle-label span,.nav-toggle-label span::before,.nav-toggle-label span::after{display:block;width:24px;height:2px;background:var(--color-text);position:relative;transition:.2s}
+.nav-toggle-label span::before{content:'';position:absolute;top:-7px}
+.nav-toggle-label span::after{content:'';position:absolute;top:7px}
+
+.main-nav ul{list-style:none;display:flex;gap:6px;margin:0;padding:0;flex-wrap:wrap}
+.main-nav a{display:block;padding:10px 14px;border-radius:var(--radius-sm);color:var(--color-text);font-weight:600;font-size:15px}
+.main-nav a:hover{background:var(--color-surface);color:var(--color-primary);text-decoration:none}
+
+.search-form{display:flex;align-items:center;background:var(--color-surface);border:1px solid var(--color-border);border-radius:999px;padding:4px 4px 4px 14px}
+.search-form input[type="text"]{border:0;background:transparent;outline:none;font-size:14px;width:150px}
+.search-form button{border:0;background:var(--color-primary);color:#fff;width:32px;height:32px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.search-form svg{width:15px;height:15px;fill:#fff}
+
+@media (max-width:860px){
+  .header-inner{flex-wrap:wrap}
+  .nav-toggle-label{display:flex;flex-direction:column;gap:0;align-items:flex-end}
+  .main-nav{width:100%;max-height:0;overflow:hidden;transition:max-height .25s ease}
+  .nav-toggle:checked ~ .main-nav{max-height:400px}
+  .main-nav ul{flex-direction:column;gap:0;padding:10px 0}
+  .search-form{width:100%;margin-top:8px}
+  .search-form input[type="text"]{flex:1;width:auto}
+}
+
+/* ==================== Breadcrumbs ==================== */
+.breadcrumbs{font-size:13px;color:var(--color-text-muted);padding:14px 0 0}
+.breadcrumbs a{color:var(--color-text-muted)}
+.breadcrumbs span[aria-current]{color:var(--color-text);font-weight:600}
+
+/* ==================== Ad slots (clean, non-intrusive, no popups) ==================== */
+.ad-slot{margin:var(--space-3) 0;text-align:center}
+.ad-slot .ad-label{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:6px}
+.ad-slot .ad-box{min-height:90px;background:var(--color-surface);border:1px dashed var(--color-border);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);font-size:13px}
+
+/* ==================== Layout ==================== */
+.page-body{padding:var(--space-4) 0}
+.layout-grid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:var(--space-4)}
+@media (max-width:960px){.layout-grid{grid-template-columns:1fr}}
+
+/* ==================== Posts (index list) ==================== */
+.post-outer{background:#fff;border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-3);margin-bottom:var(--space-3);box-shadow:var(--shadow-sm);transition:box-shadow .2s,transform .2s}
+.post-outer:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.post-title{font-size:26px;margin-top:0}
+.post-title a{color:var(--color-text)}
+.post-title a:hover{color:var(--color-primary);text-decoration:none}
+.post-header .post-timestamp,.post-header .post-author{font-size:13px;color:var(--color-text-muted)}
+.post-thumb{margin:0 0 var(--space-2);border-radius:var(--radius-md);overflow:hidden}
+.post-snippet{color:var(--color-text-muted)}
+.post-more{display:inline-block;margin-top:8px;font-weight:600}
+
+/* ==================== Post body typography ==================== */
+.post-body{font-size:17px}
+.post-body h2{font-size:24px;margin-top:2em;padding-bottom:.4em;border-bottom:3px solid var(--color-primary);background:linear-gradient(90deg,var(--color-primary),transparent 55%) bottom left / 60% 3px no-repeat, none;position:relative}
+.post-body h2{border-bottom:3px solid var(--color-border)}
+.post-body h2::after{content:'';display:block;width:64px;height:3px;background:var(--color-primary);margin-top:-3px}
+.post-body h3{font-size:20px;color:var(--color-primary-dark)}
+.post-body p{margin:0 0 1.2em}
+.post-body a{text-decoration:underline;text-underline-offset:3px}
+.post-body blockquote{margin:1.4em 0;padding:.8em 1.2em;border-inline-start:4px solid var(--color-primary);background:var(--color-surface);border-radius:var(--radius-sm);color:var(--color-text-muted)}
+.post-body img,.post-body iframe{margin:1em auto;border-radius:var(--radius-md)}
+.post-body table{width:100%;border-collapse:collapse;display:block;overflow-x:auto}
+.post-body table th,.post-body table td{border:1px solid var(--color-border);padding:8px 12px}
+.post-body code{background:var(--color-surface);padding:2px 6px;border-radius:4px;font-size:.9em}
+.post-body pre{background:#0f172a;color:#e2e8f0;padding:16px;border-radius:var(--radius-md);overflow-x:auto}
+
+/* FAQ / CTA helper classes for use inside post content (see post template) */
+.faq-item{border:1px solid var(--color-border);border-radius:var(--radius-md);padding:14px 18px;margin-bottom:12px;background:#fff}
+.faq-item > strong{display:block;color:var(--color-primary-dark);margin-bottom:6px}
+.cta-box{background:linear-gradient(135deg,var(--color-primary),var(--color-primary-dark));color:#fff;border-radius:var(--radius-lg);padding:var(--space-3) var(--space-3);margin:var(--space-4) 0;text-align:center}
+.cta-box h3{color:#fff;margin-top:0}
+.cta-box p{color:rgba(255,255,255,.9)}
+.cta-box .cta-button{display:inline-block;margin-top:8px;background:#fff;color:var(--color-primary-dark)!important;font-weight:700;padding:12px 28px;border-radius:999px;text-decoration:none!important}
+.cta-box .cta-button:hover{transform:translateY(-2px)}
+
+/* ==================== Post footer / labels ==================== */
+.post-footer{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-top:var(--space-3);padding-top:var(--space-2);border-top:1px solid var(--color-border);font-size:13px;color:var(--color-text-muted)}
+.post-labels{display:flex;flex-wrap:wrap;gap:6px;list-style:none;padding:0;margin:0}
+.post-labels a{background:var(--color-surface);border:1px solid var(--color-border);padding:4px 10px;border-radius:999px;font-size:12px;color:var(--color-text)}
+.post-labels a:hover{background:var(--color-primary);color:#fff;text-decoration:none}
+
+/* ==================== Pagination ==================== */
+.blog-pager{display:flex;justify-content:space-between;margin:var(--space-4) 0}
+.blog-pager a{background:var(--color-surface);border:1px solid var(--color-border);padding:10px 18px;border-radius:999px;font-weight:600}
+.blog-pager a:hover{background:var(--color-primary);color:#fff;text-decoration:none}
+
+/* ==================== Comments ==================== */
+.comments{margin-top:var(--space-4);padding-top:var(--space-3);border-top:1px solid var(--color-border)}
+.comments .comments-content{margin-top:var(--space-2)}
+
+/* ==================== Sidebar widgets ==================== */
+.sidebar .widget{background:#fff;border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:var(--space-3);margin-bottom:var(--space-3);box-shadow:var(--shadow-sm)}
+.sidebar .widget h2,.sidebar .widget h3{font-size:16px;text-transform:uppercase;letter-spacing:.04em;margin-top:0;padding-bottom:10px;border-bottom:2px solid var(--color-primary)}
+.sidebar .PopularPosts ul{list-style:none;margin:0;padding:0}
+.sidebar .PopularPosts li{padding:10px 0;border-bottom:1px solid var(--color-border)}
+.sidebar .PopularPosts li:last-child{border-bottom:0}
+.sidebar .PopularPosts .item-thumbnail{float:inline-start;width:60px;margin-inline-end:10px;border-radius:var(--radius-sm)}
+.sidebar .newsletter p{color:var(--color-text-muted);font-size:14px}
+.sidebar .newsletter .cta-button{display:block;text-align:center;background:var(--color-primary);color:#fff;font-weight:700;padding:12px;border-radius:var(--radius-sm)}
+.sidebar .newsletter .cta-button:hover{background:var(--color-primary-dark);text-decoration:none}
+
+/* ==================== Footer ==================== */
+.footer{background:#111827;color:#cbd5e1;margin-top:var(--space-5)}
+.footer .container{padding:var(--space-5) var(--space-2) var(--space-3)}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:var(--space-3)}
+@media (max-width:760px){.footer-grid{grid-template-columns:1fr 1fr}}
+@media (max-width:480px){.footer-grid{grid-template-columns:1fr}}
+.footer h4{color:#fff;font-size:14px;text-transform:uppercase;letter-spacing:.06em;margin-top:0}
+.footer a{color:#cbd5e1}
+.footer a:hover{color:#fff}
+.footer ul{list-style:none;padding:0;margin:0}
+.footer li{margin-bottom:8px;font-size:14px}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.1);margin-top:var(--space-3);padding-top:var(--space-2);display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;font-size:13px;color:#94a3b8}
+.attribution{font-size:12px;color:#64748b;text-align:center;padding:10px 0 0}
+
+/* ==================== Misc ==================== */
+.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.back-to-top{position:fixed;inset-inline-end:20px;bottom:20px;width:44px;height:44px;border-radius:50%;background:var(--color-primary);color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow-md);opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:60}
+.back-to-top.show{opacity:1;pointer-events:auto}
+.back-to-top:hover{background:var(--color-primary-dark);text-decoration:none}
+]]></b:skin>
+</head>
+<body>
+
+<b:section class='top-bar' id='top-bar' maxwidgets='1' showaddelement='no'>
+<b:widget id='HTML1' locked='false' title='Top bar' type='HTML' version='2'>
+<b:includable id='main'>
+<div class='top-bar'>
+  <div class='container'>
+    <span class='tagline'>Insights &amp; guides for readers across the US and worldwide</span>
+    <div class='social-icons'>
+      <a aria-label='Facebook' href='https://www.facebook.com/share/14MtXKzyxvt/' rel='noopener me' target='_blank'><svg viewBox='0 0 24 24'><path d='M13.5 21v-8h2.7l.4-3.1h-3.1V8c0-.9.3-1.5 1.6-1.5H16.7V3.6C16.4 3.6 15.4 3.5 14.3 3.5c-2.4 0-4 1.5-4 4.1v2.3H7.6V13h2.7v8h3.2z'/></svg></a>
+      <a aria-label='X (Twitter)' href='https://x.com/azzooz_999?t=C8PmKf2UqEBqIbDdcotNcg&amp;s=09' rel='noopener me' target='_blank'><svg viewBox='0 0 24 24'><path d='M18.9 3H22l-7.4 8.4L23 21h-6.9l-5.4-6.6L4.5 21H1.3l7.9-9L1 3h7.1l4.9 6.1L18.9 3zm-1.2 16h1.9L7.4 5H5.4l12.3 14z'/></svg></a>
+      <a aria-label='Instagram' href='https://www.instagram.com/tiger998.m?igsh=MWZ5OTh1ZWlzajdqaw==' rel='noopener me' target='_blank'><svg viewBox='0 0 24 24'><path d='M12 8.6a3.4 3.4 0 1 0 0 6.8 3.4 3.4 0 0 0 0-6.8zm0 5.6a2.2 2.2 0 1 1 0-4.4 2.2 2.2 0 0 1 0 4.4zm4.6-5.8a.8.8 0 1 1-1.6 0 .8.8 0 0 1 1.6 0zM21.9 7.4c-.1-1.2-.4-2.2-1.2-3-.8-.8-1.8-1.1-3-1.2C16.4 3 15.9 3 12 3s-4.4 0-5.7.2c-1.2.1-2.2.4-3 1.2-.8.8-1.1 1.8-1.2 3C2 8.6 2 9.1 2 13s0 4.4.2 5.7c.1 1.2.4 2.2 1.2 3 .8.8 1.8 1.1 3 1.2C7.6 23 8.1 23 12 23s4.4 0 5.7-.2c1.2-.1 2.2-.4 3-1.2.8-.8 1.1-1.8 1.2-3 .1-1.3.1-1.7.1-5.6s0-4.4-.1-5.6zm-2 11.1c-.1.9-.4 1.6-1.1 2.2-.7.7-1.3.9-2.2 1.1-1.2.1-1.5.2-5 .2s-3.8 0-5-.2c-.9-.2-1.6-.4-2.2-1.1-.7-.7-.9-1.3-1.1-2.2C3.2 17.4 3.2 17 3.2 13s0-3.8.2-5c.1-.9.4-1.6 1.1-2.2.7-.7 1.3-.9 2.2-1.1C7.9 4.6 8.3 4.6 12 4.6s3.8 0 5 .2c.9.1 1.6.4 2.2 1.1.7.7.9 1.3 1.1 2.2.1 1.2.2 1.5.2 5s0 3.8-.2 5z'/></svg></a>
+      <a aria-label='TikTok' href='https://www.tiktok.com/@mnaaziz3?_t=ZS-90aLnuiTlBK&amp;_r=1' rel='noopener me' target='_blank'><svg viewBox='0 0 24 24'><path d='M16.6 2h-3.2v13.9c0 1.5-1.2 2.7-2.7 2.7a2.7 2.7 0 0 1-2.7-2.7 2.7 2.7 0 0 1 2.7-2.7c.3 0 .5 0 .8.1V10c-.3 0-.5-.1-.8-.1A5.9 5.9 0 0 0 4.8 16a5.9 5.9 0 0 0 5.9 5.9A5.9 5.9 0 0 0 16.6 16V8.4c1.2.9 2.6 1.4 4.2 1.4V6.6c-2.4 0-4.2-1.9-4.2-4.3z'/></svg></a>
+      <a aria-label='YouTube' href='https://youtube.com/@tiger.ksa.07?si=gQXHGMx8VqmqxSa8' rel='noopener me' target='_blank'><svg viewBox='0 0 24 24'><path d='M22 12s0-3.1-.4-4.6c-.2-.9-.9-1.5-1.8-1.8C18.3 5.2 12 5.2 12 5.2s-6.3 0-7.8.4c-.9.2-1.6.9-1.8 1.8C2 8.9 2 12 2 12s0 3.1.4 4.6c.2.9.9 1.5 1.8 1.8 1.5.4 7.8.4 7.8.4s6.3 0 7.8-.4c.9-.2 1.6-.9 1.8-1.8.4-1.5.4-4.6.4-4.6zM10 15.3V8.7L15.8 12 10 15.3z'/></svg></a>
+    </div>
+  </div>
+</div>
+</b:includable>
+</b:widget>
+</b:section>
+
+<b:section class='header' id='header' maxwidgets='2' showaddelement='true'>
+<b:widget id='Header1' locked='false' title='tiger0009' type='Header' version='2'>
+<b:includable id='main'>
+<div class='header'>
+  <div class='container header-inner'>
+    <div class='site-branding'>
+      <p class='site-title'><a expr:href='data:blog.homepageUrl'><data:title/></a></p>
+      <b:if cond='data:description'>
+        <p class='site-description'><data:description/></p>
+      </b:if>
+    </div>
+
+    <input class='nav-toggle' id='nav-toggle' type='checkbox'/>
+    <label class='nav-toggle-label' for='nav-toggle'><span/></label>
+
+    <nav class='main-nav' role='navigation'>
+      <ul>
+        <li><a expr:href='data:blog.homepageUrl'>Home</a></li>
+        <li><a href='/search/label/Guides'>Guides</a></li>
+        <li><a href='/p/about-us.html'>About</a></li>
+        <li><a href='/p/contact-us.html'>Contact</a></li>
+        <li><a href='/p/privacy-policy.html'>Privacy Policy</a></li>
+      </ul>
+    </nav>
+
+    <form action='/search' class='search-form' method='get' role='search'>
+      <input aria-label='Search this blog' name='q' placeholder='Search...' type='text'/>
+      <button aria-label='Search' type='submit'><svg viewBox='0 0 24 24'><path d='M15.5 14h-.8l-.3-.3a6.5 6.5 0 1 0-.7.7l.3.3v.8l5 5 1.5-1.5-5-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z'/></svg></button>
+    </form>
+  </div>
+</div>
+</b:includable>
+</b:widget>
+</b:section>
+
+<div class='container'>
+  <b:if cond='data:blog.pageType == &quot;item&quot;'>
+    <nav class='breadcrumbs' aria-label='Breadcrumb'>
+      <a expr:href='data:blog.homepageUrl'>Home</a> <span>/</span> <span aria-current='page'><data:blog.pageName/></span>
+    </nav>
+  </b:if>
+</div>
+
+<div class='container'>
+  <div class='ad-slot'>
+    <span class='ad-label'>Advertisement</span>
+    <div class='ad-box'>Ad space reserved (place AdSense leaderboard unit here after approval)</div>
+  </div>
+</div>
+
+<div class='page-body container'>
+  <div class='layout-grid'>
+
+    <b:section class='main' id='main' showaddelement='no'>
+      <b:widget id='Blog1' locked='true' title='Blog Posts' type='Blog' version='2'>
+      </b:widget>
+    </b:section>
+
+    <b:section class='sidebar' id='sidebar' showaddelement='true'>
+      <b:widget id='HTML2' locked='false' title='About this blog' type='HTML' version='2'>
+      <b:includable id='main'>
+        <b:if cond='data:title != &quot;&quot;'>
+          <h2><data:title/></h2>
+        </b:if>
+        <div><data:content/></div>
+      </b:includable>
+      </b:widget>
+
+      <b:widget id='HTML3' locked='false' title='Follow us' type='HTML' version='2'>
+      <b:includable id='main'>
+        <h2>Follow Us</h2>
+        <p style='color:var(--color-text-muted);font-size:14px'>Stay updated with our latest posts on social media.</p>
+        <div class='social-icons' style='justify-content:flex-start'>
+          <a aria-label='Facebook' href='https://www.facebook.com/share/14MtXKzyxvt/' rel='noopener me' target='_blank' style='background:#1877f2'><svg viewBox='0 0 24 24'><path d='M13.5 21v-8h2.7l.4-3.1h-3.1V8c0-.9.3-1.5 1.6-1.5H16.7V3.6C16.4 3.6 15.4 3.5 14.3 3.5c-2.4 0-4 1.5-4 4.1v2.3H7.6V13h2.7v8h3.2z'/></svg></a>
+          <a aria-label='X' href='https://x.com/azzooz_999?t=C8PmKf2UqEBqIbDdcotNcg&amp;s=09' rel='noopener me' target='_blank' style='background:#000'><svg viewBox='0 0 24 24'><path d='M18.9 3H22l-7.4 8.4L23 21h-6.9l-5.4-6.6L4.5 21H1.3l7.9-9L1 3h7.1l4.9 6.1L18.9 3zm-1.2 16h1.9L7.4 5H5.4l12.3 14z'/></svg></a>
+          <a aria-label='Instagram' href='https://www.instagram.com/tiger998.m?igsh=MWZ5OTh1ZWlzajdqaw==' rel='noopener me' target='_blank' style='background:#e1306c'><svg viewBox='0 0 24 24'><path d='M12 8.6a3.4 3.4 0 1 0 0 6.8 3.4 3.4 0 0 0 0-6.8zm0 5.6a2.2 2.2 0 1 1 0-4.4 2.2 2.2 0 0 1 0 4.4zm4.6-5.8a.8.8 0 1 1-1.6 0 .8.8 0 0 1 1.6 0zM21.9 7.4c-.1-1.2-.4-2.2-1.2-3-.8-.8-1.8-1.1-3-1.2C16.4 3 15.9 3 12 3s-4.4 0-5.7.2c-1.2.1-2.2.4-3 1.2-.8.8-1.1 1.8-1.2 3C2 8.6 2 9.1 2 13s0 4.4.2 5.7c.1 1.2.4 2.2 1.2 3 .8.8 1.8 1.1 3 1.2C7.6 23 8.1 23 12 23s4.4 0 5.7-.2c1.2-.1 2.2-.4 3-1.2.8-.8 1.1-1.8 1.2-3 .1-1.3.1-1.7.1-5.6s0-4.4-.1-5.6zm-2 11.1c-.1.9-.4 1.6-1.1 2.2-.7.7-1.3.9-2.2 1.1-1.2.1-1.5.2-5 .2s-3.8 0-5-.2c-.9-.2-1.6-.4-2.2-1.1-.7-.7-.9-1.3-1.1-2.2C3.2 17.4 3.2 17 3.2 13s0-3.8.2-5c.1-.9.4-1.6 1.1-2.2.7-.7 1.3-.9 2.2-1.1C7.9 4.6 8.3 4.6 12 4.6s3.8 0 5 .2c.9.1 1.6.4 2.2 1.1.7.7.9 1.3 1.1 2.2.1 1.2.2 1.5.2 5s0 3.8-.2 5z'/></svg></a>
+          <a aria-label='TikTok' href='https://www.tiktok.com/@mnaaziz3?_t=ZS-90aLnuiTlBK&amp;_r=1' rel='noopener me' target='_blank' style='background:#000'><svg viewBox='0 0 24 24'><path d='M16.6 2h-3.2v13.9c0 1.5-1.2 2.7-2.7 2.7a2.7 2.7 0 0 1-2.7-2.7 2.7 2.7 0 0 1 2.7-2.7c.3 0 .5 0 .8.1V10c-.3 0-.5-.1-.8-.1A5.9 5.9 0 0 0 4.8 16a5.9 5.9 0 0 0 5.9 5.9A5.9 5.9 0 0 0 16.6 16V8.4c1.2.9 2.6 1.4 4.2 1.4V6.6c-2.4 0-4.2-1.9-4.2-4.3z'/></svg></a>
+          <a aria-label='YouTube' href='https://youtube.com/@tiger.ksa.07?si=gQXHGMx8VqmqxSa8' rel='noopener me' target='_blank' style='background:#ff0000'><svg viewBox='0 0 24 24'><path d='M22 12s0-3.1-.4-4.6c-.2-.9-.9-1.5-1.8-1.8C18.3 5.2 12 5.2 12 5.2s-6.3 0-7.8.4c-.9.2-1.6.9-1.8 1.8C2 8.9 2 12 2 12s0 3.1.4 4.6c.2.9.9 1.5 1.8 1.8 1.5.4 7.8.4 7.8.4s6.3 0 7.8-.4c.9-.2 1.6-.9 1.8-1.8.4-1.5.4-4.6.4-4.6zM10 15.3V8.7L15.8 12 10 15.3z'/></svg></a>
+        </div>
+      </b:includable>
+      </b:widget>
+
+      <b:widget id='PopularPosts1' locked='false' title='Popular Posts' type='PopularPosts' version='2'>
+        <b:widget-settings>
+          <b:widget-setting name='numItemsToShow'>5</b:widget-setting>
+          <b:widget-setting name='showThumbnails'>true</b:widget-setting>
+          <b:widget-setting name='showSnippets'>false</b:widget-setting>
+          <b:widget-setting name='timeRange'>ALL_TIME</b:widget-setting>
+        </b:widget-settings>
+      </b:widget>
+
+      <b:widget id='Label1' locked='false' title='Categories' type='Label' version='2'>
+        <b:widget-settings>
+          <b:widget-setting name='sorting'>ALPHA</b:widget-setting>
+          <b:widget-setting name='display'>list</b:widget-setting>
+          <b:widget-setting name='selectedLabelsList'/>
+          <b:widget-setting name='showType'>ALL</b:widget-setting>
+          <b:widget-setting name='showFreqNumbers'>true</b:widget-setting>
+        </b:widget-settings>
+      </b:widget>
+
+      <b:widget id='HTML4' locked='false' title='Sidebar ad' type='HTML' version='2'>
+      <b:includable id='main'>
+        <div class='ad-slot'>
+          <span class='ad-label'>Advertisement</span>
+          <div class='ad-box'>Ad space reserved (place AdSense unit here after approval)</div>
+        </div>
+      </b:includable>
+      </b:widget>
+    </b:section>
+
+  </div>
+</div>
+
+<b:section class='footer' id='footer' maxwidgets='1' showaddelement='no'>
+<b:widget id='HTML5' locked='false' title='Footer' type='HTML' version='2'>
+<b:includable id='main'>
+<div class='footer'>
+  <div class='container'>
+    <div class='footer-grid'>
+      <div>
+        <h4><data:blog.title/></h4>
+        <p>Practical guides and up-to-date articles written for readers in the United States and other English-speaking countries.</p>
+        <div class='social-icons'>
+          <a aria-label='Facebook' href='https://www.facebook.com/share/14MtXKzyxvt/' rel='noopener me' target='_blank'><svg viewBox='0 0 24 24'><path d='M13.5 21v-8h2.7l.4-3.1h-3.1V8c0-.9.3-1.5 1.6-1.5H16.7V3.6C16.4 3.6 15.4 3.5 14.3 3.5c-2.4 0-4 1.5-4 4.1v2.3H7.6V13h2.7v8h3.2z'/></svg></a>
+          <a aria-label='X' href='https://x.com/azzooz_999?t=C8PmKf2UqEBqIbDdcotNcg&amp;s=09' rel='noopener me' target='_blank'><svg viewBox='0 0 24 24'><path d='M18.9 3H22l-7.4 8.4L23 21h-6.9l-5.4-6.6L4.5 21H1.3l7.9-9L1 3h7.1l4.9 6.1L18.9 3zm-1.2 16h1.9L7.4 5H5.4l12.3 14z'/></svg></a>
+          <a aria-label='Instagram' href='https://www.instagram.com/tiger998.m?igsh=MWZ5OTh1ZWlzajdqaw==' rel='noopener me' target='_blank'><svg viewBox='0 0 24 24'><path d='M12 8.6a3.4 3.4 0 1 0 0 6.8 3.4 3.4 0 0 0 0-6.8zm0 5.6a2.2 2.2 0 1 1 0-4.4 2.2 2.2 0 0 1 0 4.4zm4.6-5.8a.8.8 0 1 1-1.6 0 .8.8 0 0 1 1.6 0zM21.9 7.4c-.1-1.2-.4-2.2-1.2-3-.8-.8-1.8-1.1-3-1.2C16.4 3 15.9 3 12 3s-4.4 0-5.7.2c-1.2.1-2.2.4-3 1.2-.8.8-1.1 1.8-1.2 3C2 8.6 2 9.1 2 13s0 4.4.2 5.7c.1 1.2.4 2.2 1.2 3 .8.8 1.8 1.1 3 1.2C7.6 23 8.1 23 12 23s4.4 0 5.7-.2c1.2-.1 2.2-.4 3-1.2.8-.8 1.1-1.8 1.2-3 .1-1.3.1-1.7.1-5.6s0-4.4-.1-5.6zm-2 11.1c-.1.9-.4 1.6-1.1 2.2-.7.7-1.3.9-2.2 1.1-1.2.1-1.5.2-5 .2s-3.8 0-5-.2c-.9-.2-1.6-.4-2.2-1.1-.7-.7-.9-1.3-1.1-2.2C3.2 17.4 3.2 17 3.2 13s0-3.8.2-5c.1-.9.4-1.6 1.1-2.2.7-.7 1.3-.9 2.2-1.1C7.9 4.6 8.3 4.6 12 4.6s3.8 0 5 .2c.9.1 1.6.4 2.2 1.1.7.7.9 1.3 1.1 2.2.1 1.2.2 1.5.2 5s0 3.8-.2 5z'/></svg></a>
+          <a aria-label='TikTok' href='https://www.tiktok.com/@mnaaziz3?_t=ZS-90aLnuiTlBK&amp;_r=1' rel='noopener me' target='_blank'><svg viewBox='0 0 24 24'><path d='M16.6 2h-3.2v13.9c0 1.5-1.2 2.7-2.7 2.7a2.7 2.7 0 0 1-2.7-2.7 2.7 2.7 0 0 1 2.7-2.7c.3 0 .5 0 .8.1V10c-.3 0-.5-.1-.8-.1A5.9 5.9 0 0 0 4.8 16a5.9 5.9 0 0 0 5.9 5.9A5.9 5.9 0 0 0 16.6 16V8.4c1.2.9 2.6 1.4 4.2 1.4V6.6c-2.4 0-4.2-1.9-4.2-4.3z'/></svg></a>
+          <a aria-label='YouTube' href='https://youtube.com/@tiger.ksa.07?si=gQXHGMx8VqmqxSa8' rel='noopener me' target='_blank'><svg viewBox='0 0 24 24'><path d='M22 12s0-3.1-.4-4.6c-.2-.9-.9-1.5-1.8-1.8C18.3 5.2 12 5.2 12 5.2s-6.3 0-7.8.4c-.9.2-1.6.9-1.8 1.8C2 8.9 2 12 2 12s0 3.1.4 4.6c.2.9.9 1.5 1.8 1.8 1.5.4 7.8.4 7.8.4s6.3 0 7.8-.4c.9-.2 1.6-.9 1.8-1.8.4-1.5.4-4.6.4-4.6zM10 15.3V8.7L15.8 12 10 15.3z'/></svg></a>
+        </div>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a expr:href='data:blog.homepageUrl'>Home</a></li>
+          <li><a href='/search/label/Guides'>Guides</a></li>
+          <li><a href='/sitemap.xml'>Sitemap</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href='/p/about-us.html'>About Us</a></li>
+          <li><a href='/p/contact-us.html'>Contact Us</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href='/p/privacy-policy.html'>Privacy Policy</a></li>
+          <li><a href='/p/disclaimer.html'>Disclaimer</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class='footer-bottom'>
+      <span>&#169; <data:blog.title/> — All rights reserved.</span>
+      <span>Made for readers in the USA &amp; worldwide</span>
+    </div>
+  </div>
+</div>
+</b:includable>
+</b:widget>
+</b:section>
+
+<b:section class='hidden' id='hidden-attribution' maxwidgets='1' showaddelement='no'>
+<b:widget id='Attribution1' locked='true' title='Attribution' type='Attribution' version='2'>
+<b:includable id='main'>
+  <p class='attribution'><data:attributionHtml/></p>
+</b:includable>
+</b:widget>
+</b:section>
+
+<a class='back-to-top' href='#' id='back-to-top' aria-label='Back to top'>&#8593;</a>
+<script>
+//<![CDATA[
+document.addEventListener('DOMContentLoaded',function(){
+  var btn=document.getElementById('back-to-top');
+  if(!btn)return;
+  window.addEventListener('scroll',function(){
+    if(window.scrollY>400){btn.classList.add('show');}else{btn.classList.remove('show');}
+  },{passive:true});
+  btn.addEventListener('click',function(e){e.preventDefault();window.scrollTo({top:0,behavior:'smooth'});});
+});
+//]]>
+</script>
+
+</body>
+</html>
