@@ -15,7 +15,7 @@
      write a 150-160 character description of the blog (needed for the meta description tag below)
   7. Go to Layout to confirm widgets look right, then customize logo/menu links if needed
 -->
-<html b:css='false' b:defaultwidgetversion='2' b:layoutsVersion='3' b:responsive='true'
+<html b:defaultwidgetversion='2' b:layoutsVersion='3' b:responsive='true'
       expr:dir='data:blog.languageDirection' expr:lang='data:blog.locale'
       xmlns='http://www.w3.org/1999/xhtml' xmlns:b='http://www.google.com/2005/gml/b'
       xmlns:data='http://www.google.com/2005/gml/data' xmlns:expr='http://www.google.com/2005/gml/expr'>
@@ -227,6 +227,9 @@ button,input,textarea{font-family:inherit}
 .cta-box p{color:rgba(255,255,255,.9)}
 .cta-box .cta-button{display:inline-block;margin-top:8px;background:#fff;color:var(--color-primary-dark)!important;font-weight:700;padding:12px 28px;border-radius:999px;text-decoration:none!important}
 .cta-box .cta-button:hover{transform:translateY(-2px)}
+
+/* Remove Blogger's built-in "Share" / "Get link" icon row — not part of this design */
+.post-share-buttons,.sharing,.share-buttons,.share-button-links,.byline.post-share{display:none!important}
 
 /* ==================== Post footer / labels ==================== */
 .post-footer{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-top:var(--space-3);padding-top:var(--space-2);border-top:1px solid var(--color-border);font-size:13px;color:var(--color-text-muted)}
