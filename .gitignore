@@ -1,0 +1,25 @@
+# Secrets / environment
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+
+# Runtime data
+logs/*.log
+logs/*.log.*
+data/*.db
+data/*.db-journal
+data/*.db-wal
+data/*.db-shm
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/
