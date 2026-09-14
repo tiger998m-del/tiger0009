@@ -55,9 +55,19 @@ CREATE TABLE IF NOT EXISTS risk_state (
     daily_stopped INTEGER NOT NULL DEFAULT 0,
     consecutive_losses INTEGER NOT NULL DEFAULT 0,
     pause_until TEXT,
+    effective_capital_usdt REAL NOT NULL DEFAULT 0,
     updated_at TEXT NOT NULL
 );
 """
+
+# Columns added after the initial release. Applied defensively on every
+# startup so an existing data/bot.db from an older version of the bot keeps
+# working without manual migration steps.
+_COLUMN_MIGRATIONS = {
+    "risk_state": {
+        "effective_capital_usdt": "REAL NOT NULL DEFAULT 0",
+    },
+}
 
 _OPEN_LIKE_STATUSES = ("PENDING_ENTRY", "OPEN", "CLOSING")
 
@@ -72,10 +82,21 @@ class TradeRepository:
             self._conn.execute("PRAGMA journal_mode=WAL;")
             self._conn.executescript(_SCHEMA)
             self._conn.commit()
+            self._apply_column_migrations()
 
     def close(self) -> None:
         with self._lock:
             self._conn.close()
+
+    def _apply_column_migrations(self) -> None:
+        """Adds any columns introduced in later versions to a pre-existing
+        database file. Never drops or renames data -- additive only."""
+        for table, columns in _COLUMN_MIGRATIONS.items():
+            existing = {row["name"] for row in self._conn.execute(f"PRAGMA table_info({table})")}
+            for column, ddl_type in columns.items():
+                if column not in existing:
+                    self._conn.execute(f"ALTER TABLE {table} ADD COLUMN {column} {ddl_type}")
+        self._conn.commit()
 
     # ------------------------------------------------------------- Trades
     def create_trade(self, trade: Trade) -> int:
@@ -138,6 +159,17 @@ class TradeRepository:
             rows = self._conn.execute("SELECT * FROM trades ORDER BY id ASC").fetchall()
         return [self._row_to_trade(r) for r in rows]
 
+    def get_total_realized_pnl_usdt(self) -> float:
+        """Sum of pnl_usdt across every CLOSED trade ever recorded -- the
+        ground truth used to compute compounded (reinvested) capital. Always
+        derived live from the trades table rather than an incrementally
+        maintained counter, so it can never drift out of sync."""
+        with self._lock:
+            row = self._conn.execute(
+                "SELECT COALESCE(SUM(pnl_usdt), 0) AS total FROM trades WHERE status = 'CLOSED'"
+            ).fetchone()
+        return float(row["total"]) if row else 0.0
+
     @staticmethod
     def _row_to_trade(row: sqlite3.Row) -> Trade:
         return Trade(**{k: row[k] for k in row.keys()})
@@ -154,6 +186,7 @@ class TradeRepository:
             daily_stopped=bool(row["daily_stopped"]),
             consecutive_losses=row["consecutive_losses"],
             pause_until=row["pause_until"],
+            effective_capital_usdt=row["effective_capital_usdt"],
             updated_at=row["updated_at"],
         )
 
@@ -162,14 +195,16 @@ class TradeRepository:
         with self._lock:
             self._conn.execute(
                 """INSERT INTO risk_state
-                       (id, daily_date, daily_realized_pnl_usdt, daily_stopped, consecutive_losses, pause_until, updated_at)
-                   VALUES (1, ?, ?, ?, ?, ?, ?)
+                       (id, daily_date, daily_realized_pnl_usdt, daily_stopped, consecutive_losses,
+                        pause_until, effective_capital_usdt, updated_at)
+                   VALUES (1, ?, ?, ?, ?, ?, ?, ?)
                    ON CONFLICT(id) DO UPDATE SET
                        daily_date=excluded.daily_date,
                        daily_realized_pnl_usdt=excluded.daily_realized_pnl_usdt,
                        daily_stopped=excluded.daily_stopped,
                        consecutive_losses=excluded.consecutive_losses,
                        pause_until=excluded.pause_until,
+                       effective_capital_usdt=excluded.effective_capital_usdt,
                        updated_at=excluded.updated_at
                 """,
                 (
@@ -178,6 +213,7 @@ class TradeRepository:
                     int(state.daily_stopped),
                     state.consecutive_losses,
                     state.pause_until,
+                    state.effective_capital_usdt,
                     now,
                 ),
             )

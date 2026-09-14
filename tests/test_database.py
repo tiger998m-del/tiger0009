@@ -75,3 +75,62 @@ def test_risk_state_upsert_overwrites_previous_value():
     repo.save_risk_state(RiskState(daily_date="2026-01-01", daily_realized_pnl_usdt=-9.0))
     loaded = repo.get_risk_state()
     assert loaded.daily_realized_pnl_usdt == -9.0
+
+
+def test_risk_state_effective_capital_roundtrip():
+    repo = TradeRepository(":memory:")
+    repo.save_risk_state(RiskState(daily_date="2026-01-01", effective_capital_usdt=345.67))
+    loaded = repo.get_risk_state()
+    assert loaded.effective_capital_usdt == 345.67
+
+
+def test_get_total_realized_pnl_usdt_sums_only_closed_trades():
+    repo = TradeRepository(":memory:")
+    assert repo.get_total_realized_pnl_usdt() == 0.0
+
+    id1 = repo.create_trade(Trade(symbol="BTCUSDT"))
+    repo.update_trade(id1, status=STATUS_CLOSED, pnl_usdt=12.5)
+    id2 = repo.create_trade(Trade(symbol="ETHUSDT"))
+    repo.update_trade(id2, status=STATUS_CLOSED, pnl_usdt=-4.25)
+    # Not closed -- must NOT be counted even though it happens to carry a pnl value.
+    id3 = repo.create_trade(Trade(symbol="BNBUSDT"))
+    repo.update_trade(id3, status=STATUS_OPEN, pnl_usdt=999.0)
+
+    assert repo.get_total_realized_pnl_usdt() == 8.25
+
+
+def test_migration_adds_effective_capital_column_to_pre_existing_db(tmp_path):
+    import sqlite3
+
+    db_path = str(tmp_path / "legacy.db")
+    # Simulate a database created by an older version of the bot, before
+    # effective_capital_usdt existed.
+    legacy_conn = sqlite3.connect(db_path)
+    legacy_conn.executescript(
+        """
+        CREATE TABLE risk_state (
+            id INTEGER PRIMARY KEY CHECK (id = 1),
+            daily_date TEXT NOT NULL,
+            daily_realized_pnl_usdt REAL NOT NULL DEFAULT 0,
+            daily_stopped INTEGER NOT NULL DEFAULT 0,
+            consecutive_losses INTEGER NOT NULL DEFAULT 0,
+            pause_until TEXT,
+            updated_at TEXT NOT NULL
+        );
+        """
+    )
+    legacy_conn.execute(
+        "INSERT INTO risk_state (id, daily_date, updated_at) VALUES (1, '2026-01-01', '2026-01-01T00:00:00+00:00')"
+    )
+    legacy_conn.commit()
+    legacy_conn.close()
+
+    # Opening through TradeRepository must migrate the schema without losing data.
+    repo = TradeRepository(db_path)
+    state = repo.get_risk_state()
+    assert state is not None
+    assert state.daily_date == "2026-01-01"
+    assert state.effective_capital_usdt == 0.0
+
+    repo.save_risk_state(RiskState(daily_date="2026-01-01", effective_capital_usdt=500.0))
+    assert repo.get_risk_state().effective_capital_usdt == 500.0

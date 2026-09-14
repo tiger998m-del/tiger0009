@@ -75,6 +75,7 @@ class Settings:
     # --- Capital & currency conversion -----------------------------------
     bot_capital_sar: float
     sar_per_usdt: float
+    reinvest_profits: bool               # daily compounding of realized PnL into trading capital
 
     # --- Trading mode ------------------------------------------------------
     dry_run: bool
@@ -146,11 +147,21 @@ class Settings:
 
     @property
     def capital_usdt(self) -> float:
-        """Bot-allocated capital, converted from SAR to USDT via SAR_PER_USDT."""
+        """Base bot-allocated capital, converted from SAR to USDT via SAR_PER_USDT.
+
+        This is the fixed baseline from .env ONLY. It does NOT include
+        reinvested profits -- that compounding is computed and snapshotted
+        daily by RiskManager (see app/risk/risk_manager.py), which is the
+        authoritative source for the capital actually used to size trades
+        when REINVEST_PROFITS=true. Use RiskManager.capital_usdt for trading
+        decisions; use this property only as the configured baseline.
+        """
         return self.bot_capital_sar / self.sar_per_usdt
 
     @property
     def per_trade_usdt(self) -> float:
+        """Base per-trade size from the fixed baseline capital (see capital_usdt
+        docstring). RiskManager.per_trade_usdt is what's actually used for sizing."""
         return self.capital_usdt * self.trade_allocation_pct
 
     @property
@@ -182,6 +193,7 @@ def load_settings(env_file: Optional[str] = None) -> Settings:
         telegram_username=_get_str("TELEGRAM_USERNAME", "@tiger007KSA"),
         bot_capital_sar=_get_float("BOT_CAPITAL_SAR", 1000.0),
         sar_per_usdt=_get_float("SAR_PER_USDT", 3.75),
+        reinvest_profits=_get_bool("REINVEST_PROFITS", True),
         dry_run=_get_bool("DRY_RUN", False),
         trade_allocation_pct=_get_float("TRADE_ALLOCATION_PCT", 0.48),
         max_open_positions=_get_int("MAX_OPEN_POSITIONS", 2),
