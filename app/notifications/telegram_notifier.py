@@ -101,6 +101,26 @@ class NotificationMessages:
         return "DRY RUN MODE\nNO REAL ORDERS" if dry_run else "LIVE TRADING MODE\nREAL MONEY ENABLED"
 
     @staticmethod
+    def capital_snapshot(base_usdt: float, effective_usdt: float, per_trade_usdt: float,
+                          reinvest_enabled: bool) -> str:
+        if not reinvest_enabled:
+            return (
+                "CAPITAL SNAPSHOT\n"
+                f"Reinvestment: DISABLED (fixed baseline)\n"
+                f"Trading Capital: {effective_usdt:.2f} USDT\n"
+                f"Per-Trade Size (48%): {per_trade_usdt:.2f} USDT"
+            )
+        delta = effective_usdt - base_usdt
+        sign = "+" if delta >= 0 else ""
+        return (
+            "CAPITAL SNAPSHOT (Daily Reinvestment)\n"
+            f"Baseline: {base_usdt:.2f} USDT\n"
+            f"Cumulative PnL: {sign}{delta:.2f} USDT\n"
+            f"Effective Trading Capital Today: {effective_usdt:.2f} USDT\n"
+            f"Per-Trade Size (48%): {per_trade_usdt:.2f} USDT"
+        )
+
+    @staticmethod
     def entry_signal_accepted(symbol: str, close: float, sl_pct: float, rr: float) -> str:
         return (f"ENTRY SIGNAL ACCEPTED\nSymbol: {symbol}\nClose: {close}\n"
                 f"Initial SL%: {sl_pct:.2f}%\nRisk/Reward: {rr:.2f}")

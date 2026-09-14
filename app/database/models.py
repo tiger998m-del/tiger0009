@@ -48,4 +48,5 @@ class RiskState:
     daily_stopped: bool = False
     consecutive_losses: int = 0
     pause_until: Optional[str] = None
+    effective_capital_usdt: float = 0.0
     updated_at: Optional[str] = None

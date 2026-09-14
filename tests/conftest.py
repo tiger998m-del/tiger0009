@@ -18,6 +18,7 @@ def make_settings(**overrides) -> Settings:
         telegram_username="@tiger007KSA",
         bot_capital_sar=1000.0,
         sar_per_usdt=3.75,
+        reinvest_profits=True,
         dry_run=True,
         trade_allocation_pct=0.48,
         max_open_positions=2,

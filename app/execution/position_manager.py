@@ -106,10 +106,13 @@ class PositionManager:
         if self._settings.dry_run:
             # In DRY_RUN there is no real balance to query safely (API keys
             # may not even be configured). We simulate an account that always
-            # has exactly the configured bot capital available, which is the
-            # safest, most predictable behaviour for a paper-trading mode.
+            # has exactly the current effective capital available (this is
+            # RiskManager.capital_usdt, not settings.capital_usdt, so that
+            # REINVEST_PROFITS compounding is faithfully reflected in
+            # paper-trading simulations too), which is the safest, most
+            # predictable behaviour for a paper-trading mode.
             used = sum(float(p.qty) * float(p.entry_price) for p in self._open.values())
-            return max(self._settings.capital_usdt - used, 0.0)
+            return max(self._risk.capital_usdt - used, 0.0)
 
         account = await self._rest.account_info()
         for bal in account.get("balances", []):

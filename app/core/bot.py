@@ -98,6 +98,10 @@ class TradingBot:
 
         self._repo = TradeRepository(self.settings.db_path)
         self._risk = RiskManager(self.settings, self._repo)
+        await self._notifier.send(NotificationMessages.capital_snapshot(
+            self.settings.capital_usdt, self._risk.capital_usdt, self._risk.per_trade_usdt,
+            self.settings.reinvest_profits,
+        ))
         self._market_cap_provider = MarketCapProvider(
             self.settings.coingecko_base_url, self.settings.market_cap_cache_minutes, self._session,
         )
@@ -284,6 +288,12 @@ class TradingBot:
                 event = self._risk.check_pause_expired_event()
                 if event:
                     await self._notifier.send(NotificationMessages.pause_ended(event.message))
+                snapshot_event = self._risk.check_capital_snapshot_event()
+                if snapshot_event:
+                    await self._notifier.send(NotificationMessages.capital_snapshot(
+                        self.settings.capital_usdt, self._risk.capital_usdt, self._risk.per_trade_usdt,
+                        self.settings.reinvest_profits,
+                    ))
             except Exception:
                 logger.exception("Pause watch loop iteration failed")
 
