@@ -14,6 +14,7 @@ import os
 import sqlite3
 import urllib.parse
 import urllib.request
+from datetime import datetime, timezone
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -21,7 +22,12 @@ from dotenv import load_dotenv
 REPO_ROOT = Path(__file__).resolve().parent.parent
 load_dotenv(REPO_ROOT / ".env")
 
-from app.utils.time_utils import utc_date_str  # noqa: E402 (after dotenv load)
+
+def utc_date_str() -> str:
+    """Mirrors app.utils.time_utils.utc_date_str without importing the app
+    package, so this script has no dependency on the repo root being on
+    sys.path (it is invoked directly as `python scripts/daily_report.py`)."""
+    return datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
 _TRADE_STATS_QUERY = """
     SELECT COUNT(*) AS trades,
