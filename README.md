@@ -345,6 +345,33 @@ BOT_CAPITAL_SAR=5000
 tail -f logs/bot.log
 ```
 
+## 16.1 تقرير يومي تلقائي عبر Telegram (`scripts/daily_report.py`)
+
+سكربت مستقل للقراءة فقط (لا يلمس حالة التداول إطلاقًا)، يلخّص صفقات اليوم
+(عدد الصفقات، الرابحة/الخاسرة، الربح/الخسارة، حالة Daily Stop، رأس المال
+الفعّال، الصفقات المفتوحة حاليًا) بالإضافة إلى السجل الكلي منذ بداية تشغيل
+البوت، ويرسل النتيجة كرسالة Telegram واحدة. يقرأ نفس ملف `.env` المستخدم
+للبوت (`TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `DB_PATH`).
+
+تجربة يدوية:
+
+```bash
+cd ~/tiger0009 && source venv/bin/activate
+python scripts/daily_report.py
+```
+
+جدولته يوميًا عبر cron (مثال: كل يوم الساعة 23:55 UTC):
+
+```bash
+crontab -e
+```
+
+أضف هذا السطر في نهاية الملف ثم احفظ واخرج:
+
+```
+55 23 * * * cd /root/tiger0009 && /root/tiger0009/venv/bin/python scripts/daily_report.py >> /root/tiger0009/logs/daily_report.log 2>&1
+```
+
 ## 17. تشغيل الاختبارات (Tests)
 
 ```bash
