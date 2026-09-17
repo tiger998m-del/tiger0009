@@ -117,9 +117,18 @@ async def run_startup_checks(settings: Settings, rest: BinanceRestClient) -> Sta
                     break
             required = settings.capital_usdt
             enough = free_quote >= required
+            # Never a hard-blocking (critical) check: a free balance below the
+            # theoretical per-trade size is a normal state once a position is
+            # already open (its capital is parked in the position, not free
+            # USDT), and must NOT stop the whole bot from starting -- that
+            # would leave any already-open position's ATR trailing stop and
+            # EMA8 exit completely unmonitored. New-entry sizing already
+            # fails safe on low balance (RiskManager.compute_trade_capital
+            # caps to what's actually available and PositionManager skips
+            # the entry entirely at capital<=0), so this is informational.
             items.append(CheckItem(
                 f"Capital available ({settings.quote_asset})", enough,
-                f"free={free_quote:.2f} required~={required:.2f}", not settings.dry_run,
+                f"free={free_quote:.2f} required~={required:.2f}", False,
             ))
         except Exception as exc:
             items.append(CheckItem("API key/secret authentication", False, str(exc), True))
